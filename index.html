@@ -373,62 +373,6 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 .welcome-actions button {border-radius:25px;border:2px solid #800000;padding:12px 18px;font-weight:bold;cursor:pointer;background:#800000;color:#fff8e7;}
 .welcome-actions button.secondary {background:transparent;color:#800000;}
 @media(max-width:768px){.hero-bg {background-position:64% center;} .hero-overlay {background:rgba(65,0,0,.47);} .music-toggle {bottom:70px;} .music-note {bottom:123px;} }
-
-/* Mobile header and music fixes — October 2026 */
-.music-note[hidden] { display:none !important; }
-@media (max-width: 768px) {
-  nav { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; }
-  nav .nav-logo { order:1; flex:1 1 0; min-width:0; max-width:none; gap:8px !important; }
-  nav .nav-logo img { flex-shrink:0; width:42px !important; height:42px !important; }
-  nav .nav-logo > div { min-width:0; }
-  nav .nav-logo span { overflow-wrap:anywhere; font-size:.82rem; line-height:1.25; }
-  nav .nav-logo small { font-size:.67rem; }
-  nav .mobile-menu { order:2; display:block; flex:0 0 auto; margin:0; padding:9px 11px; font-size:.82rem; white-space:nowrap; }
-  nav .nav-links { order:3; flex-basis:100%; width:100%; margin:4px 0 0; max-height:65vh; overflow-y:auto; }
-  .hero { padding:120px 16px 130px; min-height:100svh; }
-  .hero h1 { font-size:clamp(1.55rem,6.2vw,2.25rem); overflow-wrap:anywhere; }
-  .hero h2 { font-size:clamp(.95rem,3.8vw,1.2rem); }
-  .hero .vel-symbol { font-size:clamp(.95rem,4vw,1.2rem); }
-  .hero p { font-size:1rem; line-height:1.7; }
-  .om-symbol { font-size:4rem; }
-  .lang-toggle { position:static; display:flex; justify-content:center; padding:8px 12px; background:#650000; gap:8px; margin-top:66px; }
-  .lang-btn { color:#ffd700; }
-  .music-toggle { position:fixed; left:12px; bottom:calc(12px + env(safe-area-inset-bottom)); padding:10px 14px; font-size:.82rem; max-width:46vw; z-index:2400; }
-  .music-note { position:fixed; left:12px; right:12px; bottom:calc(68px + env(safe-area-inset-bottom)); max-width:none; font-size:.8rem; z-index:2400; }
-  .hero-bg { background-position:67% center; }
-}
-@media (max-width: 390px) {
-  nav .nav-logo span { font-size:.73rem; }
-  nav .nav-logo small { font-size:.6rem; }
-  nav .nav-logo img { width:36px !important; height:36px !important; }
-  nav .mobile-menu { padding:8px; }
-}
-.saint-photo {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  border: 4px solid #FFD700;
-  overflow: hidden;
-  margin: 0 auto 10px;
-  background: #800000;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-}
-
-.saint-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-@media (max-width: 600px) {
-  .saint-photo {
-    width: 90px;
-    height: 90px;
-    border-width: 3px;
-  }
-}
 </style>
 </head>
 <body>
@@ -453,14 +397,13 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 </div>
 <!-- NAV -->
 <nav>
-<div class="nav-logo" style="display:flex;align-items:center;gap:10px;">
+<button aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu" class="mobile-menu" id="mobileMenu" type="button">☰ Menu</button><div class="nav-logo" style="display:flex;align-items:center;gap:10px;">
 <img alt="Thirupugazh Adimai Sabai Logo" src="https://i.ibb.co/mMLf36G/image.jpg" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;box-shadow:0 0 10px rgba(255,215,0,0.5);"/>
 <div>
 <span class="ta-text-el">திருப்புகழ் அடிமை சபை</span><span class="en">Thirupugazh Adimai Sabai</span>
 <span class="ta-text-el" style="display:block;"></span>
 </div>
 </div>
-<button aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu" class="mobile-menu" id="mobileMenu" type="button">☰ Menu</button>
 <ul class="nav-links" id="navLinks">
 <li><a href="#about"><span class="ta-text-el">சபை பற்றி</span><span class="en">About</span></a></li>
 <li><a href="#activities"><span class="ta-text-el">நடவடிக்கைகள்</span><span class="en">Activities</span></a></li>
@@ -490,29 +433,15 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <!-- Saints Row -->
 <div style="display:flex;gap:40px;justify-content:center;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
 <div style="text-align:center;">
-<div style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,#4a0000,#800000);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 8px;box-shadow:0 0 20px rgba(255,215,0,0.4);"><div class="saint-photo">
-  <img
-    src="images/agasthiyar.jpg"
-    alt="அகஸ்தியர் - Agasthiyar"
-    loading="eager"
-  >
-</div>
-</div>
+<div style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,#4a0000,#800000);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 8px;box-shadow:0 0 20px rgba(255,215,0,0.4);">🧘</div>
 <div style="color:var(--gold);font-size:0.85rem;font-weight:bold;">அகஸ்தியர்</div>
 <div style="color:#ffcc80;font-size:0.75rem;">Agasthiyar</div>
-<div style="color:#ff9944;font-size:0.7rem;font-style:italic;">(கும்பமுனி / Guru Muni)</div>
+<div style="color:#ff9944;font-size:0.7rem;font-style:italic;">(குருமுனி / Guru Muni)
 </div>
 </div>
 <div style="color:var(--gold);font-size:1.5rem;">✦</div>
 <div style="text-align:center;">
-<div style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,#4a0000,#800000);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 8px;box-shadow:0 0 20px rgba(255,215,0,0.4);"><div class="saint-photo">
-  <img
-    src="images/arunagirinathar.jpg"
-    alt="அருணகிரிநாதர் - Arunagirinathar"
-    loading="eager"
-  >
-</div>
-</div>
+<div style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);background:linear-gradient(135deg,#4a0000,#800000);display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 8px;box-shadow:0 0 20px rgba(255,215,0,0.4);">🙏</div>
 <div style="color:var(--gold);font-size:0.85rem;font-weight:bold;">அருணகிரிநாதர்</div>
 <div style="color:#ffcc80;font-size:0.75rem;">Arunagirinathar</div>
 <div style="color:#ff9944;font-size:0.7rem;font-style:italic;">(மகான் / Mahan)</div>
@@ -846,8 +775,6 @@ let audioMissing = false;
 function showMusicNote(message) {
   musicNote.textContent = message;
   musicNote.hidden = false;
-  if (showMusicNote.timeoutId) clearTimeout(showMusicNote.timeoutId);
-  showMusicNote.timeoutId = setTimeout(() => { musicNote.hidden = true; }, 6500);
 }
 function updateMusicButton() {
   const playing = !muruganAudio.paused;
@@ -882,7 +809,7 @@ musicToggle.addEventListener('click', () => {
 muruganAudio.addEventListener('error', () => {
   audioMissing = true;
   updateMusicButton();
-  musicNote.hidden = true; // Show missing-audio guidance only if visitor tries to play.
+  showMusicNote('Song not uploaded yet: add audio/murugan-song.mp3 to the repository.');
 });
 muruganAudio.addEventListener('play', updateMusicButton);
 muruganAudio.addEventListener('pause', updateMusicButton);
