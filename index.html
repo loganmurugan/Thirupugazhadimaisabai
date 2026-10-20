@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 
 <html lang="ta">
 <head>
@@ -358,7 +357,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important;transition-duration:.01ms!important; } }
 
 /* New Murugan hero and music controls */
-.hero-bg { background-position: center center; }
+
 .hero-overlay { background:linear-gradient(90deg,rgba(48,0,0,.36),rgba(48,0,0,.08)); }
 .hero h1,.hero h2,.hero p,.hero .vel-symbol { text-shadow:0 2px 9px #250000,0 2px 20px #250000; }
 .music-toggle { position:fixed;left:16px;bottom:16px;z-index:2400;background:#800000;color:#ffdf8a;border:1px solid #ffd700;border-radius:30px;padding:12px 18px;cursor:pointer;box-shadow:0 4px 18px #0005;font-weight:bold; }
@@ -372,7 +371,79 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 .welcome-actions {display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
 .welcome-actions button {border-radius:25px;border:2px solid #800000;padding:12px 18px;font-weight:bold;cursor:pointer;background:#800000;color:#fff8e7;}
 .welcome-actions button.secondary {background:transparent;color:#800000;}
-@media(max-width:768px){.hero-bg {background-position:64% center;} .hero-overlay {background:rgba(65,0,0,.47);} .music-toggle {bottom:70px;} .music-note {bottom:123px;} }
+
+
+/* Responsive header and Murugan image: desktop composition, full image on phones. */
+html { scroll-padding-top: var(--nav-height, 90px); }
+body { overflow-x: visible; }
+nav { position: sticky; top: 0; gap: 16px; padding: 12px 24px; }
+.nav-logo { min-width: 0; flex: 0 1 auto; }
+.nav-logo > img { flex-shrink: 0; }
+.nav-logo > div { min-width: 0; overflow-wrap: anywhere; }
+.nav-logo .ta { color: var(--gold); font-size: .9rem; }
+body.en-mode .nav-logo .ta { display: none; }
+.nav-links { margin-right: 0; gap: 16px; }
+.nav-links a { display: block; }
+.lang-toggle { top: auto; right: max(12px, env(safe-area-inset-right)); bottom: calc(12px + env(safe-area-inset-bottom)); padding: 5px; border-radius: 28px; background: var(--maroon); }
+.lang-btn { min-height: 44px; }
+.hero { min-height: calc(100svh - var(--nav-height, 80px)); padding: 48px 4%; align-items: flex-start; background: #390700; isolation: isolate; }
+.hero-bg { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: right top; background: none; }
+.hero-overlay { background: linear-gradient(90deg, rgba(48,0,0,.90) 0%, rgba(48,0,0,.70) 42%, rgba(48,0,0,.05) 70%); pointer-events: none; }
+.hero-content { width: 50%; max-width: 720px; min-width: 0; }
+.hero h1 { font-size: clamp(1.8rem, 2.8vw, 2.8rem); line-height: 1.4; overflow-wrap: anywhere; }
+.hero h2 { font-size: clamp(1rem, 1.5vw, 1.3rem); line-height: 1.6; }
+.hero p { line-height: 1.9; }
+.hero .om-symbol { font-size: 4rem; }
+.hero-btns > a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.hero-btns .ta-text-el, body.en-mode .hero-btns .en { display: inline; }
+body.en-mode .hero-btns .ta-text-el { display: none; }
+.floating-petals { inset: 0; }
+.about-grid > *, .act-grid > *, .verse-grid > *, .contact-grid > *, .event-info { min-width: 0; }
+.contact-card, .event-info, .section-header { overflow-wrap: anywhere; }
+.join-form input:not([type="checkbox"]), .join-form select, .join-form textarea { width: 100%; min-width: 0; }
+.gallery-photo img[hidden] { display: none; }
+footer { padding-bottom: calc(150px + env(safe-area-inset-bottom)); }
+.music-toggle { bottom: calc(16px + env(safe-area-inset-bottom)); min-height: 44px; }
+.music-note { bottom: calc(76px + env(safe-area-inset-bottom)); max-width: min(280px, calc(100vw - 32px)); }
+.welcome-music { overflow-y: auto; }
+.welcome-panel { margin: auto; max-width: 100%; max-height: 100%; overflow-y: auto; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+@media (max-width: 1100px) {
+  nav { flex-wrap: wrap; gap: 8px 12px; padding: 10px 16px; }
+  .nav-logo { max-width: none; flex: 1 1 0; }
+  .mobile-menu { display: block; margin: 0; flex: 0 0 auto; min-height: 44px; padding: 10px 12px; }
+  .nav-links { display: none; flex-basis: 100%; width: 100%; flex-direction: column; gap: 0; margin: 0; max-height: 60svh; overflow-y: auto; }
+  .nav-links.open { display: flex; }
+  .nav-links li a { padding: 12px 6px; }
+  .act-grid, .contact-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  nav { padding: 10px 12px; }
+  .nav-logo .ta, .nav-logo .en { font-size: .75rem; line-height: 1.5; }
+  .nav-logo > img { width: 38px !important; height: 38px !important; }
+  .hero { min-height: 0; display: block; padding: 0 0 40px; }
+  .hero-bg { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: contain; }
+  .hero-overlay { display: none; }
+  .hero-content { width: 100%; max-width: none; padding: 24px 20px 0; }
+  .hero h1 { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .hero h2 { letter-spacing: 1px; }
+  .hero .om-symbol { font-size: 3.5rem; }
+  .hero-btns { flex-direction: column; align-items: stretch; }
+  .hero-btns > a { padding: 14px 18px; }
+  .hero-content > div[style*="gap:40px"] { gap: 16px !important; }
+  .about-grid, .act-grid, .verse-grid, .contact-grid { grid-template-columns: minmax(0, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .section-header h2 { font-size: 1.7rem; }
+  .event-item { gap: 14px; padding: 18px 14px; }
+  .event-date { min-width: 62px; padding: 10px; align-self: flex-start; }
+  .music-toggle { bottom: calc(76px + env(safe-area-inset-bottom)); left: 12px; }
+  .music-note { bottom: calc(132px + env(safe-area-inset-bottom)); left: 12px; }
+}
+@media (max-width: 380px) {
+  .event-item { flex-direction: column; }
+  .about-card, .verse-card { padding: 24px 18px; }
+}
+
 </style>
 </head>
 <body>
@@ -397,13 +468,13 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 </div>
 <!-- NAV -->
 <nav>
-<button aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu" class="mobile-menu" id="mobileMenu" type="button">☰ Menu</button><div class="nav-logo" style="display:flex;align-items:center;gap:10px;">
+<div class="nav-logo" style="display:flex;align-items:center;gap:10px;">
 <img alt="Thirupugazh Adimai Sabai Logo" src="https://i.ibb.co/mMLf36G/image.jpg" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;box-shadow:0 0 10px rgba(255,215,0,0.5);"/>
 <div>
 <span class="ta">திருப்புகழ் அடிமை சபை</span><span class="en">Thirupugazh Adimai Sabai</span>
-<span class="ta-text-el" style="display:block;"></span>
 </div>
 </div>
+<button aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu" class="mobile-menu" id="mobileMenu" type="button">☰ Menu</button>
 <ul class="nav-links" id="navLinks">
 <li><a href="#about"><span class="ta-text-el">பற்றி</span><span class="en">About</span></a></li>
 <li><a href="#activities"><span class="ta-text-el">நடவடிக்கைகள்</span><span class="en">Activities</span></a></li>
@@ -416,7 +487,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 </nav>
 <!-- HERO -->
 <section class="hero" id="home">
-<div class="hero-bg"></div>
+<img class="hero-bg" src="images/murugan-hero.jpg" alt="Lord Murugan with the vel and peacock beside a temple" width="1536" height="1024" fetchpriority="high" decoding="async"/>
 <div class="hero-overlay"></div>
 <div class="floating-petals">
 <div class="petal" style="left:5%;animation-duration:8s;animation-delay:0s">🦚</div>
@@ -428,6 +499,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <div class="petal" style="left:95%;animation-duration:7s;animation-delay:2.5s">🌸</div>
 </div>
 
+<div class="hero-content">
 <div class="om-symbol">ஓம்</div>
 <div style="color:var(--gold);font-size:1rem;margin-bottom:6px;letter-spacing:2px;font-style:italic;">🦚 ஓம் அகஸ்தீஷாய நமஹ 🦚</div>
 <!-- Saints Row -->
@@ -456,6 +528,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <div class="hero-btns">
 <a class="btn-primary" href="#join">🙏 <span class="ta-text-el">சபையில் இணையுங்கள்</span><span class="en">Join Our Sabai</span></a>
 <a class="btn-secondary" href="#thirupugazh">📖 <span class="ta-text-el">திருப்புகழ் படிக்க</span><span class="en">Read Thirupugazh</span></a>
+</div>
 </div>
 </section>
 <!-- ABOUT -->
@@ -701,6 +774,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <script>
 
   function setLang(lang) {
+    document.documentElement.lang = lang;
 
     if (lang === 'en') {
 
@@ -734,6 +808,27 @@ navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   navLinks.classList.remove('open');
   mobileMenu.setAttribute('aria-expanded', 'false');
 }));
+// Keep anchor targets below the collapsed sticky header, in either language.
+const navigation = document.querySelector('nav');
+function updateNavHeight() {
+  if (!navLinks.classList.contains('open')) {
+    document.documentElement.style.setProperty('--nav-height', navigation.offsetHeight + 'px');
+  }
+}
+new ResizeObserver(updateNavHeight).observe(navigation);
+const desktopNavigation = window.matchMedia('(min-width: 1101px)');
+desktopNavigation.addEventListener('change', () => {
+  navLinks.classList.remove('open');
+  mobileMenu.setAttribute('aria-expanded', 'false');
+  updateNavHeight();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    mobileMenu.setAttribute('aria-expanded', 'false');
+    mobileMenu.focus();
+  }
+});
 // Missing photographs show a placeholder rather than a broken image icon.
 document.querySelectorAll('.gallery-photo img').forEach(img => {
   img.addEventListener('error', () => {
@@ -770,26 +865,28 @@ const welcomeMusic = document.getElementById('welcomeMusic');
 const musicToggle = document.getElementById('musicToggle');
 const musicNote = document.getElementById('musicNote');
 let audioMissing = false;
+let musicRequested = false;
 function showMusicNote(message) {
   musicNote.textContent = message;
   musicNote.hidden = false;
 }
 function updateMusicButton() {
-  const playing = !muruganAudio.paused;
+  const playing = !audioMissing && !muruganAudio.paused;
   musicToggle.textContent = playing ? '♫ Pause Music' : '♫ Play Music';
   musicToggle.setAttribute('aria-pressed', String(playing));
   musicToggle.setAttribute('aria-label', playing ? 'Pause Murugan devotional song' : 'Play Murugan devotional song');
 }
 async function playMusic() {
+  musicRequested = true;
   if (audioMissing) {
-    showMusicNote('Add your licensed Murugan song as audio/murugan-song.mp3 and publish it to GitHub.');
+    showMusicNote('Music unavailable. Please try again later.');
     return;
   }
   try {
     await muruganAudio.play();
     musicNote.hidden = true;
   } catch (error) {
-    showMusicNote('Music unavailable. Upload your Murugan song as audio/murugan-song.mp3.');
+    showMusicNote('Music unavailable. Please try again later.');
   }
   updateMusicButton();
 }
@@ -799,6 +896,7 @@ document.getElementById('enterMusic').addEventListener('click', () => {
 });
 document.getElementById('enterSilent').addEventListener('click', () => {
   welcomeMusic.hidden = true;
+  musicNote.hidden = true;
 });
 musicToggle.addEventListener('click', () => {
   if (muruganAudio.paused) playMusic();
@@ -807,7 +905,7 @@ musicToggle.addEventListener('click', () => {
 muruganAudio.addEventListener('error', () => {
   audioMissing = true;
   updateMusicButton();
-  showMusicNote('Song not uploaded yet: add audio/murugan-song.mp3 to the repository.');
+  if (musicRequested) showMusicNote('Music unavailable. Please try again later.');
 });
 muruganAudio.addEventListener('play', updateMusicButton);
 muruganAudio.addEventListener('pause', updateMusicButton);
