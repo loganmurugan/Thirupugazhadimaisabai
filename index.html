@@ -64,11 +64,11 @@
 
     position: absolute; inset: 0; z-index: 0;
 
-    background-image: linear-gradient(135deg, #800000, #3b0909);
+    background-image: linear-gradient(90deg, rgba(62,0,0,.72), rgba(62,0,0,.30)), url("images/murugan-hero.jpg");
 
     background-size: cover; background-position: center top;
 
-    opacity: 0.18; filter: sepia(30%) saturate(150%);
+    opacity: 1;
 
   }
 
@@ -356,9 +356,40 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 }
 @media(max-width:420px) { .gallery-grid { grid-template-columns:1fr; } .nav-logo img { width:38px!important;height:38px!important; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation-duration:.01ms!important;transition-duration:.01ms!important; } }
+
+/* New Murugan hero and music controls */
+.hero-bg { background-position: center center; }
+.hero-overlay { background:linear-gradient(90deg,rgba(48,0,0,.36),rgba(48,0,0,.08)); }
+.hero h1,.hero h2,.hero p,.hero .vel-symbol { text-shadow:0 2px 9px #250000,0 2px 20px #250000; }
+.music-toggle { position:fixed;left:16px;bottom:16px;z-index:2400;background:#800000;color:#ffdf8a;border:1px solid #ffd700;border-radius:30px;padding:12px 18px;cursor:pointer;box-shadow:0 4px 18px #0005;font-weight:bold; }
+.music-toggle:hover,.music-toggle:focus-visible {background:#9d2400;}
+.music-note { position:fixed;left:16px;bottom:70px;z-index:2400;background:#fff8e7;color:#800000;border-radius:9px;padding:10px 12px;max-width:280px;font-size:.85rem;box-shadow:0 3px 12px #0003; }
+.welcome-music {position:fixed;inset:0;z-index:3500;background:linear-gradient(130deg,#310000ed,#800000ee);display:flex;align-items:center;justify-content:center;padding:24px;}
+.welcome-music[hidden] {display:none;}
+.welcome-panel {background:#fff8e7;border:3px solid #ffd700;border-radius:20px;max-width:530px;padding:30px 26px;text-align:center;box-shadow:0 10px 50px #0007;}
+.welcome-panel h2 {color:#800000;font-size:1.6rem;margin:12px 0;}
+.welcome-panel p {color:#5d2800;line-height:1.7;margin-bottom:20px;}
+.welcome-actions {display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.welcome-actions button {border-radius:25px;border:2px solid #800000;padding:12px 18px;font-weight:bold;cursor:pointer;background:#800000;color:#fff8e7;}
+.welcome-actions button.secondary {background:transparent;color:#800000;}
+@media(max-width:768px){.hero-bg {background-position:64% center;} .hero-overlay {background:rgba(65,0,0,.47);} .music-toggle {bottom:70px;} .music-note {bottom:123px;} }
 </style>
 </head>
 <body>
+<div class="welcome-music" id="welcomeMusic" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <div class="welcome-panel">
+    <div style="font-size:2.6rem">🙏 🪔 🔱</div>
+    <h2 id="welcomeTitle">திருப்புகழ் அடிமை சபை</h2>
+    <p>வெற்றிவேல்! வீரவேல்! முருகனுக்கு அரோகரா!<br>Welcome to Thiruppugazh Adimai Sabai.</p>
+    <div class="welcome-actions">
+      <button type="button" id="enterMusic">🎵 இசையுடன் நுழைய / Enter with Music</button>
+      <button type="button" class="secondary" id="enterSilent">நுழைய / Enter Silently</button>
+    </div>
+  </div>
+</div>
+<audio id="muruganAudio" src="audio/murugan-song.mp3" loop preload="none"></audio>
+<button type="button" id="musicToggle" class="music-toggle" aria-label="Play Murugan devotional song" aria-pressed="false">♫ Play Music</button>
+<p class="music-note" id="musicNote" role="status" hidden></p>
 <!-- LANG TOGGLE -->
 <div class="lang-toggle">
 <button class="lang-btn active" id="btn-ta" onclick="setLang('ta')">தமிழ்</button>
@@ -370,11 +401,11 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <img alt="Thirupugazh Adimai Sabai Logo" src="https://i.ibb.co/mMLf36G/image.jpg" style="width:50px;height:50px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;box-shadow:0 0 10px rgba(255,215,0,0.5);"/>
 <div>
 <span class="ta-text-el">திருப்புகழ் அடிமை சபை</span><span class="en">Thirupugazh Adimai Sabai</span>
-<span class="ta-text-el" style="display:block;"></span>
+<span class="ta-text-el" style="display:block;"><small>Thirupugazh Adimai Sabai</small></span>
 </div>
 </div>
 <ul class="nav-links" id="navLinks">
-<li><a href="#about"><span class="ta-text-el">சபை பற்றி</span><span class="en">About</span></a></li>
+<li><a href="#about"><span class="ta-text-el">பற்றி</span><span class="en">About</span></a></li>
 <li><a href="#activities"><span class="ta-text-el">நடவடிக்கைகள்</span><span class="en">Activities</span></a></li>
 <li><a href="#thirupugazh"><span class="ta-text-el">திருப்புகழ்</span><span class="en">Thirupugazh</span></a></li>
 <li><a href="#events"><span class="ta-text-el">நிகழ்வுகள்</span><span class="en">Events</span></a></li>
@@ -396,7 +427,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <div class="petal" style="left:85%;animation-duration:11s;animation-delay:0.5s">🌼</div>
 <div class="petal" style="left:95%;animation-duration:7s;animation-delay:2.5s">🌸</div>
 </div>
-<div class="murugan-silhouette">🦚</div>
+
 <div class="om-symbol">ஓம்</div>
 <div style="color:var(--gold);font-size:1rem;margin-bottom:6px;letter-spacing:2px;font-style:italic;">🕉️ ஓம் அகஸ்தீஷாய நமஹ 🕉️</div>
 <!-- Saints Row -->
@@ -417,13 +448,13 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <div class="vel-symbol">🦚 நானென்று மார்தட்டும் பெருமாளே 🦚</div>
 <h1><span class="ta-text-el">திருப்புகழ் அடிமை சபை</span><span class="en">Thirupugazh Adimai Sabai</span></h1>
 <h2><span class="ta-text-el">THIRUPUGAZH ADIMAI SABAI</span><span class="en">திருப்புகழ் அடிமை சபை</span></h2>
-<p class="hero-subtitle">"பாடும் பணியே பணியாய் அருள்வாய்" 🙏</p>
+<p class="hero-subtitle">"பாடும் பணியே பணியா அருள்வாய்" 🙏</p>
 <p>
 <span class="ta-text-el">முருகப்பெருமானின் திவ்யமான திருப்புகழை பாடி, பரவி, பரப்பும் பக்தர்களின் சங்கம். அருணகிரிநாதர் அருளிய திருப்புகழை நாம் தினமும் பாடி முருகனின் அருளை பெறுவோம்.</span>
 <span class="en">A divine congregation of devotees dedicated to singing, spreading and propagating the sacred Thirupugazh of Lord Muruga. Let us sing the Thirupugazh composed by Arunagirinathar daily and receive Lord Muruga's blessings.</span>
 </p>
 <div class="hero-btns">
-<a class="btn-primary" href="#join">🙏 <span class="ta-text-el">சபையில் இணைய</span><span class="en">Join Our Sabai</span></a>
+<a class="btn-primary" href="#join">🙏 <span class="ta-text-el">சபையில் இணையுங்கள்</span><span class="en">Join Our Sabai</span></a>
 <a class="btn-secondary" href="#thirupugazh">📖 <span class="ta-text-el">திருப்புகழ் படிக்க</span><span class="en">Read Thirupugazh</span></a>
 </div>
 </section>
@@ -431,7 +462,7 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <section class="about" id="about">
 <div class="section-header">
 <div class="ta"><span class="ta-text-el">எங்களை பற்றி</span><span class="en">About Us</span></div>
-<h2><span class="ta-text-el">திருப்புகழ் அடிமை சபை பற்றி</span><span class="en">About Our Thirupugazh Adimai Sabai</span></h2>
+<h2><span class="ta-text-el">எங்கள் சபை பற்றி</span><span class="en">About Our Sabai</span></h2>
 <div class="gold-line"></div>
 <p><span class="ta-text-el">திருப்புகழை பாடி முருகனின் அருளை பெறும் பக்தர்களின் புனித சங்கம்</span><span class="en">A divine congregation dedicated to reciting Thirupugazh and receiving Lord Muruga's blessings</span></p>
 </div>
@@ -653,14 +684,14 @@ body { font-family: Georgia, "Noto Sans Tamil", sans-serif; }
 <span aria-hidden="true" class="social-btn">💬</span>
 </div>
 <div class="footer-links">
-<a href="#about"><span class="ta-text-el">சபை பற்றி</span><span class="en">About</span></a>
+<a href="#about"><span class="ta-text-el">பற்றி</span><span class="en">About</span></a>
 <a href="#activities"><span class="ta-text-el">நடவடிக்கைகள்</span><span class="en">Activities</span></a>
 <a href="#thirupugazh">Thirupugazh</a>
 <a href="#events"><span class="ta-text-el">நிகழ்வுகள்</span><span class="en">Events</span></a>
 <a href="#join"><span class="ta-text-el">இணையுங்கள்</span><span class="en">Join Us</span></a>
 <a href="#contact"><span class="ta-text-el">தொடர்பு</span><span class="en">Contact</span></a>
 </div>
-<p>"பாடும் பணியே பணியாய் அருள்வாய் — முருகன் துணை" 🙏</p>
+<p>"பாடும் பணியே பணியா அருள்வாய் — வேல் முருகன் துணை" 🙏</p>
 <div class="copyright">
 
     © 2026 திருப்புகழ் அடிமை சபை | Thirupugazh Adimai Sabai. All Rights Reserved.<br/>
@@ -731,5 +762,54 @@ document.getElementById('joinForm').addEventListener('submit', event => {
   status.textContent = 'Please review and send the email in your email application. / மின்னஞ்சலை சரிபார்த்து அனுப்பவும்.';
   window.location.href = 'mailto:' + sabaiEmail + '?subject=' + encodeURIComponent('Sabai Membership Enquiry') + '&body=' + encodeURIComponent(body);
 });
+</script>
+<script>
+// Browsers require a visitor gesture before music can play with sound.
+const muruganAudio = document.getElementById('muruganAudio');
+const welcomeMusic = document.getElementById('welcomeMusic');
+const musicToggle = document.getElementById('musicToggle');
+const musicNote = document.getElementById('musicNote');
+let audioMissing = false;
+function showMusicNote(message) {
+  musicNote.textContent = message;
+  musicNote.hidden = false;
+}
+function updateMusicButton() {
+  const playing = !muruganAudio.paused;
+  musicToggle.textContent = playing ? '♫ Pause Music' : '♫ Play Music';
+  musicToggle.setAttribute('aria-pressed', String(playing));
+  musicToggle.setAttribute('aria-label', playing ? 'Pause Murugan devotional song' : 'Play Murugan devotional song');
+}
+async function playMusic() {
+  if (audioMissing) {
+    showMusicNote('Add your licensed Murugan song as audio/murugan-song.mp3 and publish it to GitHub.');
+    return;
+  }
+  try {
+    await muruganAudio.play();
+    musicNote.hidden = true;
+  } catch (error) {
+    showMusicNote('Music unavailable. Upload your Murugan song as audio/murugan-song.mp3.');
+  }
+  updateMusicButton();
+}
+document.getElementById('enterMusic').addEventListener('click', () => {
+  welcomeMusic.hidden = true;
+  playMusic();
+});
+document.getElementById('enterSilent').addEventListener('click', () => {
+  welcomeMusic.hidden = true;
+});
+musicToggle.addEventListener('click', () => {
+  if (muruganAudio.paused) playMusic();
+  else { muruganAudio.pause(); updateMusicButton(); }
+});
+muruganAudio.addEventListener('error', () => {
+  audioMissing = true;
+  updateMusicButton();
+  showMusicNote('Song not uploaded yet: add audio/murugan-song.mp3 to the repository.');
+});
+muruganAudio.addEventListener('play', updateMusicButton);
+muruganAudio.addEventListener('pause', updateMusicButton);
 </script></body>
 </html>
