@@ -1,365 +1,124 @@
-let currentLanguage = "ta";
+// Edit these settings when your song, contact email and approved member names are ready.
+const SITE_CONFIG = {
+  musicSrc: '', // Example: 'audio/murugan-song.mp3' after uploading the actual file.
+  recordingTitle: '', // Optional title to display above the player.
+  contactEmail: '', // Confirm the receiving address before enabling email enquiries.
+  members: [] // Add approved names/roles: { name: '...', role: '...' }
+};
 
-const languageButton = document.getElementById("language");
 
-function changeLanguage(language) {
-  currentLanguage = language;
 
-  document.documentElement.lang = language;
+  function setLang(lang) {
+    document.documentElement.lang = lang;
 
-  document.querySelectorAll("[data-ta][data-en]").forEach(element => {
-    element.textContent = element.dataset[language];
-  });
+    if (lang === 'en') {
 
-  languageButton.textContent =
-    language === "ta" ? "English" : "தமிழ்";
-}
+      document.body.classList.add('en-mode');
 
-languageButton.addEventListener("click", () => {
-  const nextLanguage =
-    currentLanguage === "ta" ? "en" : "ta";
+      document.getElementById('btn-en').classList.add('active');
 
-  changeLanguage(nextLanguage);
-});
+      document.getElementById('btn-ta').classList.remove('active');
 
-changeLanguage("ta");
-const songs = [
-  {
-    title: "முத்தைத்தரு பத்தித் திருநகை",
-    english: "Muththaiththaru",
-    lyrics: "",
-    meaning: ""
-  },
-  {
-    title: "நாத விந்து கலாதீ நமோ நம",
-    english: "Naadha Vindhu",
-    lyrics: "",
-    meaning: ""
-  },
-  {
-    title: "ஏறுமயில் ஏறி விளையாடும் முகம்",
-    english: "Eru Mayil Eri",
-    lyrics: "",
-    meaning: ""
-  }
-];
-
-const songSearch = document.getElementById("songSearch");
-const songList = document.getElementById("songList");
-
-function renderSongs(searchText = "") {
-  songList.replaceChildren();
-
-  const filteredSongs = songs.filter(song =>
-    (song.title + " " + song.english)
-      .toLocaleLowerCase()
-      .includes(searchText.toLocaleLowerCase())
-  );
-
-  if (filteredSongs.length === 0) {
-    const empty = document.createElement("p");
-    empty.textContent = "No matching songs found.";
-    songList.appendChild(empty);
-    return;
-  }
-
-  filteredSongs.forEach(song => {
-    const card = document.createElement("details");
-    card.className = "song-card";
-
-    const heading = document.createElement("summary");
-    heading.textContent = song.title + " — " + song.english;
-
-    const lyrics = document.createElement("p");
-    lyrics.textContent = song.lyrics ||
-      "பாடல் வரிகள் விரைவில் சேர்க்கப்படும்.";
-
-    const meaning = document.createElement("p");
-    meaning.textContent = song.meaning ||
-      "பாடல் விளக்கம் விரைவில் சேர்க்கப்படும்.";
-
-    card.append(heading, lyrics, meaning);
-    songList.appendChild(card);
-  });
-}
-
-songSearch.addEventListener("input", () => {
-  renderSongs(songSearch.value);
-});
-
-renderSongs();
-
-const events = [
-  {
-    tamil: "திருப்புகழ் பாராயணம்",
-    english: "Thiruppugazh Parayanam",
-    date: "",
-    location: "",
-    description: "திருப்புகழ் பாடல்கள் பாராயணம்"
-  },
-  {
-    tamil: "மகா ருத்ராபிஷேகம்",
-    english: "Maha Rudra Abhishekam",
-    date: "",
-    location: "",
-    description: "சிறப்பு அபிஷேக வழிபாடு"
-  },
-  {
-    tamil: "மகா யாகம்",
-    english: "Maha Yagam",
-    date: "",
-    location: "",
-    description: "வேத முறைப்படி யாக வழிபாடு"
-  },
-  {
-    tamil: "கந்த சஷ்டி விழா",
-    english: "Skanda Sashti Festival",
-    date: "",
-    location: "",
-    description: "முருகப்பெருமானின் சிறப்பு வழிபாடு"
-  }
-];
-
-const eventList = document.getElementById("eventList");
-
-function renderEvents() {
-  eventList.replaceChildren();
-
-  events.forEach(event => {
-    const card = document.createElement("article");
-    card.className = "event-card";
-
-    const title = document.createElement("h3");
-    title.textContent = currentLanguage === "ta"
-      ? event.tamil
-      : event.english;
-
-    const date = document.createElement("p");
-    date.textContent = event.date ||
-      (currentLanguage === "ta"
-        ? "தேதி பின்னர் அறிவிக்கப்படும்"
-        : "Date to be announced");
-
-    const location = document.createElement("p");
-    location.textContent = event.location ||
-      (currentLanguage === "ta"
-        ? "இடம் பின்னர் அறிவிக்கப்படும்"
-        : "Location to be announced");
-
-    const description = document.createElement("p");
-    description.textContent = event.description;
-
-    card.append(title, date, location, description);
-    eventList.appendChild(card);
-  });
-}
-
-renderEvents();
-
-document.getElementById("language")
-  .addEventListener("click", renderEvents);
-
-  const galleryPhotos = [
-  {
-    tamil: "ஆலய தரிசனம்",
-    english: "Temple Darshan",
-    image: "images/திருப்புகழ்-பாராயணம்.jpeg"
-  },
-  {
-    tamil: "மகா ருத்ராபிஷேகம்",
-    english: "Maha Rudra Abhishekam",
-    image: "images/மகா-ருத்ராபிஷேகம்.jpeg"
-  },
-  {
-    tamil: "யாக வழிபாடு",
-    english: "Yagam Ceremony",
-    image: "images/மகா-யாகம்.jpeg"
-  },
-  {
-    tamil: "முருகன் திருவிழா",
-    english: "Lord Murugan Festival",
-    image: "images/கந்த-சஷ்டி-விழா.jpeg"
-  }
-];
-
-const galleryVideos = [
-  {
-    tamil: "திருப்புகழ் பாராயணம்",
-    english: "Thirupugazh Parayanam",
-    youtubeId: ""
-  },
-  {
-    tamil: "ஆன்மிக நிகழ்ச்சிகள்",
-    english: "Devotional Programs",
-    youtubeId: ""
-  }
-];
-
-function renderGallery() {
-  const photoContainer =
-    document.getElementById("photoGallery");
-
-  const videoContainer =
-    document.getElementById("videoGallery");
-
-  photoContainer.replaceChildren();
-  videoContainer.replaceChildren();
-
-  galleryPhotos.forEach(photo => {
-    const card = document.createElement("article");
-    card.className = "gallery-card";
-
-    if (photo.image) {
-      const img = document.createElement("img");
-      img.src = photo.image;
-      img.alt = currentLanguage === "ta"
-        ? photo.tamil
-        : photo.english;
-      img.loading = "lazy";
-      card.appendChild(img);
     } else {
-      const placeholder = document.createElement("div");
-      placeholder.className = "gallery-placeholder";
-      placeholder.textContent = ":camera:";
-      card.appendChild(placeholder);
+
+      document.body.classList.remove('en-mode');
+
+      document.getElementById('btn-ta').classList.add('active');
+
+      document.getElementById('btn-en').classList.remove('active');
+
     }
 
-    const title = document.createElement("h4");
-    title.textContent = currentLanguage === "ta"
-      ? photo.tamil
-      : photo.english;
+  }
 
-    card.appendChild(title);
-    photoContainer.appendChild(card);
-  });
 
-  galleryVideos.forEach(video => {
-    const card = document.createElement("article");
-    card.className = "gallery-card";
 
-    if (video.youtubeId) {
-      const iframe = document.createElement("iframe");
-      iframe.src =
-        "https://www.youtube-nocookie.com/embed/" +
-        encodeURIComponent(video.youtubeId);
-      iframe.title = currentLanguage === "ta"
-        ? video.tamil
-        : video.english;
-      iframe.loading = "lazy";
-      iframe.allowFullscreen = true;
-      iframe.referrerPolicy = "strict-origin-when-cross-origin";
-      card.appendChild(iframe);
-    } else {
-      const placeholder = document.createElement("div");
-      placeholder.className = "gallery-placeholder";
-      placeholder.textContent = ":arrow_forward:";
-      card.appendChild(placeholder);
-    }
-
-    const title = document.createElement("h4");
-    title.textContent = currentLanguage === "ta"
-      ? video.tamil
-      : video.english;
-
-    card.appendChild(title);
-    videoContainer.appendChild(card);
-  });
+const mobileMenu = document.getElementById('mobileMenu');
+const navLinks = document.getElementById('navLinks');
+mobileMenu.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  mobileMenu.setAttribute('aria-expanded', String(open));
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  mobileMenu.setAttribute('aria-expanded', 'false');
+}));
+// Keep anchor targets below the collapsed sticky header, in either language.
+const navigation = document.querySelector('nav');
+function updateNavHeight() {
+  if (!navLinks.classList.contains('open')) {
+    document.documentElement.style.setProperty('--nav-height', navigation.offsetHeight + 'px');
+  }
 }
-
-renderGallery();
-
-document.getElementById("language")
-  .addEventListener("click", renderGallery);
-  const membershipForm =
-  document.getElementById("membershipForm");
-
-const formMessage =
-  document.getElementById("formMessage");
-
-
-const sabaiEmail = "contact@thirupugazhadimaisabai.com";
-
-membershipForm.addEventListener("submit", function(event) {
+new ResizeObserver(updateNavHeight).observe(navigation);
+const desktopNavigation = window.matchMedia('(min-width: 1401px)');
+desktopNavigation.addEventListener('change', () => {
+  navLinks.classList.remove('open');
+  mobileMenu.setAttribute('aria-expanded', 'false');
+  updateNavHeight();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && navLinks.classList.contains('open')) {
+    navLinks.classList.remove('open');
+    mobileMenu.setAttribute('aria-expanded', 'false');
+    mobileMenu.focus();
+  }
+});
+// Missing photographs show a placeholder rather than a broken image icon.
+document.querySelectorAll('.gallery-photo img').forEach(img => {
+  const showFallback = () => { img.hidden = true; img.nextElementSibling.hidden = false; };
+  img.addEventListener('error', showFallback);
+  if (img.complete && img.naturalWidth === 0) showFallback();
+});
+// Enter the Sabai's confirmed email address here before using the enquiry form.
+const sabaiEmail = SITE_CONFIG.contactEmail;
+document.getElementById('joinForm').addEventListener('submit', event => {
   event.preventDefault();
-
-  if (!membershipForm.reportValidity()) return;
-
-  if (sabaiEmail === "contact@thirupugazhadimaisabai.com") {
-    formMessage.textContent = currentLanguage === "ta"
-      ? "முதலில் சபையின் மின்னஞ்சல் முகவரியை அமைக்கவும்."
-      : "Please configure the Sabai email address first.";
+  const status = document.getElementById('joinStatus');
+  if (!sabaiEmail) {
+    status.textContent = 'Official Sabai email is not configured yet. / சபை மின்னஞ்சல் முகவரி இன்னும் அமைக்கப்படவில்லை.';
     return;
   }
-
-  const name =
-    document.getElementById("memberName").value.trim();
-
-  const email =
-    document.getElementById("memberEmail").value.trim();
-
-  const phone =
-    document.getElementById("memberPhone").value.trim();
-
-  const city =
-    document.getElementById("memberCity").value.trim();
-
-  const interest =
-    document.getElementById("memberInterest");
-
-  const interestText =
-    interest.options[interest.selectedIndex].dataset.en;
-
-  const subject =
-    "Thirupugazh Adimai Sabai - Membership Enquiry";
-
+  const f = event.currentTarget;
   const body = [
-    "Vanakkam,",
-    "",
-    "I would like to enquire about the Sabai.",
-    "",
-    "Name: " + name,
-    "Email: " + email,
-    "Phone: " + phone,
-    "City: " + city,
-    "Interest: " + interestText,
-    "",
-    "Thank you."
-  ].join("\n");
-
-  const mailto =
-    "mailto:" + sabaiEmail +
-    "?subject=" + encodeURIComponent(subject) +
-    "&body=" + encodeURIComponent(body);
-
-  formMessage.textContent = currentLanguage === "ta"
-    ? "மின்னஞ்சல் செயலி திறக்கும். அனுப்புவதை உறுதிசெய்யவும்."
-    : "Your email app will open. Please review and send.";
-
-  window.location.href = mailto;
+    'Membership enquiry - Thirupugazhadimaisabai & Arakattalai', '',
+    'Name: ' + f.elements.name.value,
+    'Email: ' + f.elements.email.value,
+    'Phone: ' + f.elements.phone.value,
+    'City: ' + f.elements.city.value,
+    'Message: ' + f.elements.message.value
+  ].join('\n');
+  status.textContent = 'Please review and send the email in your email application. / மின்னஞ்சலை சரிபார்த்து அனுப்பவும்.';
+  window.location.href = 'mailto:' + sabaiEmail + '?subject=' + encodeURIComponent('Sabai Membership Enquiry') + '&body=' + encodeURIComponent(body);
 });
 
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
-
-function closeMobileMenu() {
-  mainNav.classList.remove("open");
-  menuToggle.setAttribute("aria-expanded", "false");
+// No autoplay, no opening popup and no request to a missing song when unconfigured.
+function configureMusicPlayer(config, player, emptyMessage, status, title) {
+  if (!config.musicSrc.trim()) return;
+  emptyMessage.hidden = true;
+  player.hidden = false;
+  if (config.recordingTitle.trim()) title.textContent = config.recordingTitle;
+  player.addEventListener('error', () => {
+    player.hidden = true;
+    status.textContent = 'ஒலிப்பதிவை இயக்க முடியவில்லை. / This recording could not be loaded.';
+  });
+  player.addEventListener('canplay', () => { status.textContent = ''; });
+  player.src = config.musicSrc;
 }
+configureMusicPlayer(SITE_CONFIG,
+  document.getElementById('muruganAudio'), document.getElementById('recordingEmpty'),
+  document.getElementById('recordingStatus'), document.getElementById('recordingTitle'));
 
-menuToggle.addEventListener("click", () => {
-  const isOpen = mainNav.classList.toggle("open");
-  menuToggle.setAttribute(
-    "aria-expanded",
-    String(isOpen)
-  );
-});
-
-mainNav.querySelectorAll("a").forEach(link => {
-  link.addEventListener("click", closeMobileMenu);
-});
-
-window.addEventListener("resize", () => {
-  if (window.innerWidth > 600) {
-    closeMobileMenu();
-  }
+// Public directory: names and roles only. Keep private member records off this page.
+const directory = document.getElementById('memberDirectory');
+SITE_CONFIG.members.forEach(member => {
+  if (!member.name || !member.name.trim()) return;
+  const card = document.createElement('article');
+  card.className = 'member-card';
+  const name = document.createElement('h3');
+  name.textContent = member.name;
+  const role = document.createElement('p');
+  role.textContent = member.role || '';
+  card.append(name, role);
+  directory.appendChild(card);
 });
