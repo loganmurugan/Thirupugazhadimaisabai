@@ -391,6 +391,53 @@ body.sabai-entered .devotional-jump-letter{animation:sabai-letter-jump 1.8s ease
  body main > section:not(.hero) h4{padding-left:40px;padding-right:40px}
 }
 </style>
+<style id="mobile-heading-text-position">
+/* Move text 4px lower in every mobile content-heading frame.
+   Balanced padding preserves frame height and absolute logo positions. */
+@media (max-width:768px){
+ body main > section:not(.hero) h2{padding-top:22px;padding-bottom:14px}
+ body main > section:not(.hero) h3{padding-top:16px;padding-bottom:8px}
+ body main > section:not(.hero) h4{padding-top:14px;padding-bottom:6px}
+}
+@media (max-width:680px){
+ body main > section:not(.hero) h2{padding-top:20px;padding-bottom:12px}
+}
+</style>
+<style id="header-invocation-style">
+nav[aria-label="Main navigation"] .header-invocation{
+ grid-column:1/-1;grid-row:2;justify-self:center;margin:0;padding:2px 12px;
+ width:100%;text-align:center;color:#ffe1ac;font-weight:700;
+ font-size:clamp(.9rem,1.4vw,1.1rem);line-height:1.8;overflow-wrap:anywhere;
+}
+nav[aria-label="Main navigation"] .nav-links{grid-row:3}
+@media(max-width:768px){
+ nav[aria-label="Main navigation"] .header-invocation{font-size:.9rem;padding:0 8px}
+ nav[aria-label="Main navigation"] .lang-toggle,
+ nav[aria-label="Main navigation"] .mobile-menu{grid-row:3}
+ nav[aria-label="Main navigation"] .nav-links{grid-row:4}
+}
+</style>
+<style id="invocation-gold-divider">
+nav[aria-label="Main navigation"] .header-invocation{
+ border-top:1px solid #ffd56844;
+ padding-top:10px;
+ color:var(--gold);
+}
+</style>
+<style id="invocation-vel-ornaments">
+nav[aria-label="Main navigation"] .header-invocation{
+ display:flex;align-items:center;justify-content:center;gap:14px;
+}
+.header-invocation .invocation-text{min-width:0;text-align:center}
+.header-invocation .invocation-ornament{
+ display:block;width:72px;height:46px;flex:0 0 72px;color:inherit;
+}
+.header-invocation .ornament-right{transform:scaleX(-1)}
+@media(max-width:768px){
+ nav[aria-label="Main navigation"] .header-invocation{gap:8px}
+ .header-invocation .invocation-ornament{width:38px;height:30px;flex-basis:38px}
+}
+</style>
 </head>
 <body>
 <!-- LANG TOGGLE -->
@@ -411,6 +458,7 @@ body.sabai-entered .devotional-jump-letter{animation:sabai-letter-jump 1.8s ease
 <button class="flower-button" id="flowerToggle" type="button" aria-pressed="false" aria-label="Start flower shower"><span aria-hidden="true">🌸</span><span class="flower-label">Flowers</span></button>
 </div>
 <button aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu" class="mobile-menu" id="mobileMenu" type="button">☰ Menu</button></div>
+<p class="header-invocation" lang="ta"><svg class="invocation-ornament ornament-left" viewBox="0 0 76 48" aria-hidden="true" focusable="false"><path d="M2 25H43M10 20H35M10 30H35" fill="none" stroke="currentColor" stroke-width="1" opacity=".65"/><path d="M41 25l4-3 4 3-4 3z" fill="currentColor"/><path d="M59 3C56 10 49 13 49 20a10 10 0 0020 0C69 13 62 10 59 3Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M59 8v35M54 27h10M55 32h8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M57 42h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="invocation-text">ஓம் அகத்தீசாய நமஹ</span><svg class="invocation-ornament ornament-right" viewBox="0 0 76 48" aria-hidden="true" focusable="false"><path d="M2 25H43M10 20H35M10 30H35" fill="none" stroke="currentColor" stroke-width="1" opacity=".65"/><path d="M41 25l4-3 4 3-4 3z" fill="currentColor"/><path d="M59 3C56 10 49 13 49 20a10 10 0 0020 0C69 13 62 10 59 3Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M59 8v35M54 27h10M55 32h8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M57 42h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></p>
 <ul class="nav-links" id="navLinks">
 <li><a href="#updates"><span class="ta-text-el">தகவல்கள்</span><span class="en">Updates</span></a></li>
 <li><a href="#about"><span class="ta-text-el">சபை பற்றி</span><span class="en">About</span></a></li>
