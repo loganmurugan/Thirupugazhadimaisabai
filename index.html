@@ -377,6 +377,20 @@ body.sabai-entered .devotional-jump-letter{animation:sabai-letter-jump 1.8s ease
 /* Circular Sabai logo for the floating Thirupugazh shortcut. */
 .thirupugazh-shortcut img{border-radius:50%;clip-path:circle(50% at 50% 50%);overflow:hidden}
 </style>
+<style id="mobile-centred-headings">
+/* Centre mobile headings, with equal space beside framed heading ornaments. */
+@media (max-width:768px){
+ body main :is(h1,h2,h3,h4,h5,h6),
+ body dialog :is(h1,h2,h3,h4,h5,h6){text-align:center}
+ body main .portal-eyebrow{text-align:center}
+ body main .updates-heading{align-items:center;text-align:center}
+ body main .updates-heading>div{width:100%;min-width:0}
+ body main .updates-heading .updates-follow{align-self:center;text-align:center}
+ body main > section:not(.hero) h2{margin-left:auto;margin-right:auto}
+ body main > section:not(.hero) h3{padding-left:48px;padding-right:48px}
+ body main > section:not(.hero) h4{padding-left:40px;padding-right:40px}
+}
+</style>
 </head>
 <body>
 <!-- LANG TOGGLE -->
