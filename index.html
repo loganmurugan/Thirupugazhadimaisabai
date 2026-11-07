@@ -9,7 +9,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192x192.png?v=20261106"/>
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20261106"/>
 
-<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; script-src &#x27;sha256-QQXCRIdWunM3Gik61UdFvj0KVU6hr1SIgflhQy2w00g=&#x27;; script-src-attr &#x27;none&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27;; img-src &#x27;self&#x27; data: https://ylexhjbbqbxcstebbbnn.supabase.co; media-src &#x27;self&#x27; data: blob:; font-src &#x27;self&#x27; data:; connect-src &#x27;self&#x27; https://ylexhjbbqbxcstebbbnn.supabase.co; frame-src https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com; form-action &#x27;self&#x27; https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;"/>
+<meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; script-src &#x27;sha256-vDn02TI4jrnRA37HDXMQRwAh/HLpIgg4Qyz3QPHUaFM=&#x27;; script-src-attr &#x27;none&#x27;; style-src &#x27;self&#x27; &#x27;unsafe-inline&#x27;; img-src &#x27;self&#x27; data: https://ylexhjbbqbxcstebbbnn.supabase.co; media-src &#x27;self&#x27; data: blob:; font-src &#x27;self&#x27; data:; connect-src &#x27;self&#x27; https://ylexhjbbqbxcstebbbnn.supabase.co; frame-src https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com; form-action &#x27;self&#x27; https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;"/>
 <meta name="referrer" content="strict-origin-when-cross-origin"/>
 
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -378,6 +378,18 @@ body.sabai-entered .devotional-jump-letter{animation:sabai-letter-jump 1.8s ease
 .thirupugazh-shortcut-label{display:block;box-sizing:border-box;max-width:100%;padding:2px 7px;border:1px solid #c3974c;border-radius:12px;background:#fff5dc;color:#78180f;font-family:"Noto Sans Tamil",Arial,sans-serif;font-size:12px;font-weight:700;line-height:1.5;text-align:center;white-space:nowrap}
 @media(max-width:768px){.thirupugazh-shortcut{gap:2px}.thirupugazh-shortcut img{width:54px;height:54px}.thirupugazh-shortcut-label{font-size:10px;padding:1px 5px}}
 
+/* Members */
+.member-directory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:1200px;margin:32px auto 0}
+.member-card{min-width:0;text-align:center;padding:28px 22px;border:1px solid #d6b56d;border-radius:20px;background:#fff8e7;box-shadow:0 8px 24px #680b0509;overflow-wrap:anywhere}
+.member-card .member-photo{display:block;width:144px;height:144px;object-fit:cover;border-radius:50%;margin:0 auto 20px;border:2px solid #d6b56d}
+body main>section .member-card h3{padding:0;border:0;outline:0;background:none;box-shadow:none;font-size:1.3rem;line-height:1.7;margin:0 0 14px;min-height:0}
+body main>section .member-card h3::before,body main>section .member-card h3::after{display:none}
+.member-card p{margin:8px 0;line-height:1.7}.member-public-status{text-align:center}
+.member-editor{border:1px solid #d6b56d;border-radius:14px;padding:20px;margin:18px 0}
+.member-editor .admin-input-grid label{display:flex;flex-direction:column;gap:8px;min-width:0}
+.member-admin-photo{display:block;width:110px;height:110px;object-fit:cover;border-radius:12px;margin:12px 0}
+@media(max-width:900px){.member-directory{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.member-directory{grid-template-columns:minmax(0,1fr);gap:18px}.member-card{padding:24px 18px}.member-editor .admin-input-grid{grid-template-columns:minmax(0,1fr)}}
 </style>
 <style>
 /* Circular Sabai logo for the floating Thirupugazh shortcut. */
@@ -493,6 +505,11 @@ nav[aria-label="Main navigation"] .header-invocation{
  .hero-slider-pause{min-width:80px;padding:4px 7px;font-size:.72rem}
 }
 @media(prefers-reduced-motion:reduce){.hero-slide{transition:none}}
+</style>
+<style>
+/* Keep member names compact and centered despite the shared decorated-heading styles. */
+body #memberDirectory .member-card h3{display:block;padding:0;margin:0 0 14px;min-height:0;border:0;outline:0;background:none;box-shadow:none;text-align:center;transform:none}
+body #memberDirectory .member-card h3::before,body #memberDirectory .member-card h3::after{display:none}
 </style>
 </head>
 <body>
@@ -648,7 +665,11 @@ nav[aria-label="Main navigation"] .header-invocation{
 <p><span class="ta-text-el">திருப்புகழின் மகிமையை பரப்பும் எங்கள் தெய்வீக குடும்பத்தில் இணையுங்கள். முருகன் பக்தர்கள் அனைவரும் வரவேற்கப்படுகிறார்கள்!</span><span class="en">Be part of our divine family dedicated to spreading the glory of Thirupugazh. All devotees of Lord Muruga are welcome!</span></p>
 <form class="join-form" id="joinForm" method="post"><div class="registration-honeypot" aria-hidden="true"><label for="join-website">Leave this field empty</label><input id="join-website" name="website" tabindex="-1" autocomplete="off" type="text"/></div><label for="join-name">உங்கள் பெயர் / Your Name</label><input id="join-name" maxlength="150" name="name" placeholder="உங்கள் பெயர் / Your Name" required="" type="text"/><label for="join-email">மின்னஞ்சல் / Email Address</label><input id="join-email" maxlength="254" name="email" placeholder="மின்னஞ்சல் / Email Address" required="" type="email"/><label for="join-phone">தொலைபேசி / Phone Number</label><input id="join-phone" maxlength="30" name="phone" placeholder="தொலைபேசி / Phone Number" required="" type="tel"/><label for="join-city">உங்கள் ஊர் / Your City</label><input id="join-city" maxlength="150" name="city" placeholder="உங்கள் ஊர் / Your City" type="text"/><label for="join-message">செய்தி / Message</label><textarea maxlength="4000" id="join-message" name="message" placeholder="செய்தி / Message"></textarea><label class="consent-row"><input id="join-consent" name="consent" value="yes" required="" type="checkbox"/> I agree to share these details with the Sabai for this enquiry. / சபை தொடர்பு கொள்ள சம்மதிக்கிறேன்.</label><button id="registrationSubmit" type="submit" disabled>விண்ணப்பத்தை அனுப்ப / Submit registration</button><p aria-live="polite" id="joinStatus" role="status"></p></form><p class="registration-contact">தொடர்புக்கு / Enquiries: <a href="mailto:contact@thirupugazhadimaisabai.com">contact@thirupugazhadimaisabai.com</a></p>
 </section>
-<section class="members" id="members"><div class="section-header"><h2><span class="ta-text-el">சபை உறுப்பினர்கள்</span><span class="en">Sabai Members</span></h2><div class="gold-line"></div></div><div class="info-panel"><p><span class="ta-text-el">சபை உறுப்பினர்கள் மற்றும் தன்னார்வ சேவை பற்றிய விவரங்களுக்கு சபையைத் தொடர்பு கொள்ளுங்கள்.</span><span class="en">Contact the Sabai for information about members and volunteering.</span></p><div class="member-grid" id="memberDirectory"></div></div></section>
+<section class="members" id="members">
+<div class="section-header"><h2><span class="ta-text-el">சபை உறுப்பினர்கள்</span><span class="en">Sabai Members</span></h2><div class="gold-line"></div></div>
+<div class="info-panel" id="membersIntro"><p><span class="ta-text-el">சபை உறுப்பினர்கள் மற்றும் தன்னார்வ சேவை பற்றிய விவரங்களுக்கு சபையைத் தொடர்பு கொள்ளுங்கள்.</span><span class="en">Contact the Sabai for information about members and volunteering.</span></p></div>
+<p id="memberPublicStatus" class="member-public-status" role="status"></p>
+<div id="memberDirectory" class="member-directory"></div></section>
 <section class="faq" id="faq"><div class="section-header"><h2><span class="ta-text-el">அடிக்கடி கேட்கப்படும் கேள்விகள்</span><span class="en">Frequently Asked Questions</span></h2><div class="gold-line"></div><p><span class="ta-text-el">பங்கேற்பதற்கு முன் தெரிந்துகொள்ள வேண்டியவை.</span><span class="en">Useful information before taking part.</span></p></div><div class="faq-list"><details><summary><span class="ta-text-el">திருப்புகழ் தெரியாவிட்டாலும் இணையலாமா?</span><span class="en">How Can I Begin If I Am New To Thirupugazh?</span></summary><p><span class="ta-text-el">முதலில் பாடல்களைக் கேட்டு, சில வரிகளாகப் பயிற்சி செய்யுங்கள். பங்கேற்பு மற்றும் வழிகாட்டுதல் குறித்து சபையிடம் கேட்டறியுங்கள்.</span><span class="en">Start by listening and practising a few lines. Contact the Sabai to ask about participation and guidance.</span></p></details><details><summary><span class="ta-text-el">நிகழ்ச்சிகளின் நேரம், இடம் எங்கே தெரியும்?</span><span class="en">Where Can I Find Event Times And Venues?</span></summary><p><span class="ta-text-el">நிகழ்வுகள் பகுதியில் உள்ள அறிவிப்புகளைப் பாருங்கள். தேதி அல்லது இடம் உறுதியாகக் குறிப்பிடப்படவில்லை என்றால், பயணத்திற்கு முன் சபையிடம் உறுதிப்படுத்துங்கள்.</span><span class="en">Check the Events section. If a date or venue is not confirmed, contact the Sabai before travelling.</span></p></details><details><summary><span class="ta-text-el">தன்னார்வ சேவை செய்ய விரும்பினால் என்ன செய்வது?</span><span class="en">How Can I Express Interest In Volunteering?</span></summary><p><span class="ta-text-el">உங்களுக்கு விருப்பமான சேவையைச் செய்தியில் குறிப்பிட்டு சபையைத் தொடர்பு கொள்ளுங்கள்.</span><span class="en">Contact the Sabai and mention the activities you would like to help with.</span></p></details><details><summary><span class="ta-text-el">விண்ணப்பம் அனுப்பியவுடன் உறுப்பினர் சேர்க்கை உறுதியாகுமா?</span><span class="en">Does Sending An Enquiry Confirm Membership?</span></summary><p><span class="ta-text-el">உங்கள் ஆர்வத்தைத் தெரிவிக்க விண்ணப்பம் உதவுகிறது. சேர்க்கை மற்றும் அடுத்த படிகள் குறித்து சபை நிர்வாகிகளிடம் உறுதிப்படுத்துங்கள்.</span><span class="en">An enquiry expresses your interest. Confirm membership and next steps with the Sabai organisers.</span></p></details></div></section>
 <!-- CONTACT -->
 <section class="contact" id="contact">
@@ -721,7 +742,7 @@ nav[aria-label="Main navigation"] .header-invocation{
     <div id="adminWorkspace" hidden>
       <div class="admin-toolbar"><p id="adminIdentity"></p><button type="button" id="adminLogout">வெளியேறு / Sign out</button></div>
       
-<div class="admin-section-switch" aria-label="Administration sections"><button type="button" id="adminPhotosTab" aria-pressed="true">படங்கள் / Manage photos</button><button type="button" id="adminEventsTab" aria-pressed="false">நிகழ்வுகள் / Manage Events</button><button type="button" id="adminActivitiesTab" aria-pressed="false" hidden>நடவடிக்கைகள் / Manage Activities</button></div>
+<div class="admin-section-switch" aria-label="Administration sections"><button type="button" id="adminPhotosTab" aria-pressed="true">படங்கள் / Manage photos</button><button type="button" id="adminEventsTab" aria-pressed="false">நிகழ்வுகள் / Manage Events</button><button type="button" id="adminActivitiesTab" aria-pressed="false" hidden>நடவடிக்கைகள் / Manage Activities</button><button type="button" id="adminMembersTab" aria-pressed="false" hidden>உறுப்பினர்கள் / Manage Members</button></div>
 <div id="adminPhotoPanel">
 <form id="adminAlbumForm" class="admin-form admin-upload">
  <h3>புதிய தொகுப்பு / Create an album</h3>
@@ -747,7 +768,14 @@ nav[aria-label="Main navigation"] .header-invocation{
       <p id="homepagePhotoSetupStatus" class="admin-note" role="status"></p>
       <div id="adminGalleryList"></div>
 </div>
-<div id="adminActivitiesPanel" hidden>
+<div id="adminMembersPanel" hidden>
+<h3>உறுப்பினர்களை நிர்வகிக்க / Manage Members</h3>
+<p class="admin-note">Add or edit member names, Sabai names, positions, locations and photos in Tamil and English. Publish when ready; untick Published to hide a profile.</p>
+<button type="button" id="adminMembersRefresh">புதுப்பி / Refresh members</button>
+<p id="adminMemberStatus" class="admin-note" role="status"></p>
+<h4>புதிய உறுப்பினர் / Add Member</h4><div id="memberCreate"></div>
+<h4>உறுப்பினர் விவரங்களை மாற்று / Edit Members</h4><div id="memberEditList"></div>
+</div><div id="adminActivitiesPanel" hidden>
 <h3>நடவடிக்கைகளை நிர்வகிக்க / Manage Activities</h3>
 <p class="admin-note">Edit every existing Activities heading and description in Tamil and English. Existing text saves publish immediately. Add new records as drafts, then publish when ready. Changes appear for visitors when they open or refresh the website.</p>
 <button type="button" id="adminActivitiesRefresh">நடவடிக்கைகளைப் புதுப்பி / Refresh Activities</button>
@@ -1544,6 +1572,7 @@ requestAnimationFrame(startFlowerShower);
   }
   function showSignedOut() {
     byId("adminPhotosTab").hidden=false;byId("adminEventsTab").hidden=false;byId("adminActivitiesTab").hidden=true;
+    memberAccess=false;byId('adminMembersTab').hidden=true;byId('memberCreate').replaceChildren();byId('memberEditList').replaceChildren();byId('adminMemberStatus').textContent='';
     activityAccess=false;activityTexts=[];activityEntries=[];byId("activityTextList").replaceChildren();byId("activityEntryList").replaceChildren();byId("activityEntryCreate").replaceChildren();
     session = null; sessionVersion++;
     byId('adminWorkspace').hidden = true;
@@ -1630,23 +1659,27 @@ requestAnimationFrame(startFlowerShower);
       if (!data?.access_token || !data.user?.email) throw new Error('Sign-in was not confirmed. Please try again.');
       session = data; sessionVersion++;
       const mainAdmin=data.user.email.toLowerCase()===CMS.email;
-      let eventAccess=mainAdmin;activityAccess=mainAdmin;
+      let eventAccess=mainAdmin;activityAccess=mainAdmin;memberAccess=mainAdmin;
       if(!mainAdmin){
         if(!data.user.id)throw new Error('Your administrator identity could not be verified.');
         const uid=encodeURIComponent(data.user.id);
-        const [events,activities]=await Promise.all([
+        const [events,activities,members]=await Promise.all([
           api('/rest/v1/sabai_event_admins?select=user_id&user_id=eq.'+uid).catch(()=>[]),
-          api('/rest/v1/sabai_activity_admins_v1?select=user_id&user_id=eq.'+uid).catch(()=>[])
+          api('/rest/v1/sabai_activity_admins_v1?select=user_id&user_id=eq.'+uid).catch(()=>[]),
+          api('/rest/v1/sabai_member_admins_v1?select=user_id&user_id=eq.'+uid).catch(()=>[])
         ]);
         eventAccess=Array.isArray(events)&&events.some(row=>row.user_id===data.user.id);
         activityAccess=Array.isArray(activities)&&activities.some(row=>row.user_id===data.user.id);
-        if(!eventAccess&&!activityAccess)throw new Error('This account has not been approved as a Sabai administrator. Contact the project owner.');
+        memberAccess=Array.isArray(members)&&members.some(row=>row.user_id===data.user.id);
+        if(!eventAccess&&!activityAccess&&!memberAccess)throw new Error('This account has not been approved as a Sabai administrator. Contact the project owner.');
       }
       byId('adminPhotosTab').hidden=!mainAdmin;byId('adminEventsTab').hidden=!eventAccess;byId('adminActivitiesTab').hidden=!activityAccess;
       if(mainAdmin){await loadAdminAlbums();await loadAdminGallery();}
       if(eventAccess)await loadAdminEvents();
+      byId('adminMembersTab').hidden=!memberAccess;
+      if(memberAccess)await loadAdminMembers();
       if(activityAccess)await loadAdminActivities();
-      selectAdminPanel(mainAdmin?'photos':activityAccess?'activities':'events');
+      selectAdminPanel(mainAdmin?'photos':activityAccess?'activities':memberAccess?'members':'events');
       byId('adminIdentity').textContent = data.user.email;
       byId('adminLoginForm').hidden = true; byId('adminWorkspace').hidden = false;
       message('உள்நுழைந்துவிட்டீர்கள். / Signed in.');
@@ -1906,9 +1939,105 @@ requestAnimationFrame(startFlowerShower);
   byId('adminActivitiesRefresh').addEventListener('click',async()=>{if(busy||!activityAccess)return;setBusy(true);try{await loadAdminActivities();await loadPublicActivities();}finally{setBusy(false);}});
   loadPublicActivities();
 
+
+  // Sabai member directory: public published cards and approved-admin editing.
+  let memberAccess=false,memberPublicVersion=0;
+  const memberTable='/rest/v1/sabai_members_v1';
+  const memberBucket='sabai-member-photos-v1';
+  const memberFields='id,name_ta,name_en,sabai_ta,sabai_en,position_ta,position_en,location_ta,location_en,photo_path,sort_order,published';
+  function validMemberPhoto(path){return typeof path==='string'&&/^members\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(path);}
+  function memberPhotoUrl(path){return validMemberPhoto(path)?CMS.url+'/storage/v1/object/public/'+memberBucket+'/'+path:'';}
+  function memberText(value,label){const text=String(value||'').trim();if(!text||text.length>200)throw new Error(label+': enter 1–200 characters.');return text;}
+  function renderMemberCards(rows){
+    const list=byId('memberDirectory');list.replaceChildren();
+    for(const row of rows){
+      const card=element('article','member-card');
+      const photo=memberPhotoUrl(row.photo_path);
+      if(photo){const img=element('img','member-photo');img.src=photo;img.alt=row.name_ta+' / '+row.name_en;img.loading='lazy';img.decoding='async';img.addEventListener('error',()=>{img.hidden=true;});card.append(img);}
+      const title=element('h3');bilingual(title,row.name_ta,row.name_en);card.append(title);
+      for(const [key,ta,en]of [['position','பதவி','Position'],['sabai','சபை','Sabai'],['location','இடம்','Location']]){
+        const p=element('p'),label=element('strong');bilingual(label,ta+': ',en+': ');p.append(label);bilingual(p,row[key+'_ta'],row[key+'_en']);card.append(p);
+      }
+      list.append(card);
+    }
+    byId('membersIntro').hidden=rows.length>0;
+  }
+  async function loadPublicMembers(){
+    const version=++memberPublicVersion;
+    try{
+      const rows=await allRows(memberTable+'?select='+memberFields+'&published=eq.true&order=sort_order.asc,created_at.asc');
+      if(version!==memberPublicVersion)return false;
+      renderMemberCards(rows);byId('memberPublicStatus').textContent='';return true;
+    }catch(_){if(version===memberPublicVersion){byId('memberPublicStatus').replaceChildren();bilingual(byId('memberPublicStatus'),'உறுப்பினர் விவரங்களுக்கு சபையைத் தொடர்பு கொள்ளுங்கள்.','Contact the Sabai for member details.');}return false;}
+  }
+  function memberEditor(row){
+    const form=element('form','admin-form member-editor');
+    const fields={};
+    const definitions=[['name','உறுப்பினர் பெயர்','Member name'],['sabai','சபையின் பெயர்','Sabai name'],['position','சபைப் பதவி','Sabai position'],['location','வசிக்கும் இடம்','Location / city']];
+    for(const [key,tamil,english]of definitions){
+      const pair=element('div','admin-input-grid');
+      for(const lang of ['ta','en']){
+        const label=element('label','',tamil+' / '+english+' — '+(lang==='ta'?'தமிழ்':'English'));
+        const input=element('input');input.type='text';input.maxLength=200;input.required=true;input.lang=lang;
+        input.setAttribute('aria-label',english+' '+(lang==='ta'?'Tamil':'English'));
+        input.value=row?.[key+'_'+lang]??(key==='sabai'?(lang==='ta'?'திருப்புகழ் அடிமை சபை & அறக்கட்டளை':'Thirupugazh Adimai Sabai Trust'):'');
+        label.append(input);pair.append(label);fields[key+'_'+lang]=input;
+      }
+      form.append(pair);
+    }
+    if(row?.photo_path&&validMemberPhoto(row.photo_path)){const preview=element('img','member-admin-photo');preview.src=memberPhotoUrl(row.photo_path);preview.alt=row.name_en;preview.loading='lazy';form.append(preview);}
+    const fileLabel=element('label','','உறுப்பினர் படம் / Member photo — JPEG, PNG or WebP, up to 5 MB (optional)');
+    const file=element('input');file.type='file';file.accept='image/jpeg,image/png,image/webp';fileLabel.append(file);form.append(fileLabel);
+    const remove=addField(form,'தற்போதைய படத்தை நீக்கு / Remove current photo','checkbox',false);
+    const order=addField(form,'வரிசை / Display order','number',row?.sort_order??50);
+    const published=addField(form,'இணையத்தில் காட்டு / Published on the website','checkbox',!!row?.published);
+    form.append(element('p','admin-note','Upload member photos with their permission. Published profiles and uploaded photo links are public. Unpublishing hides the profile; existing photo links may still work.'));
+    const save=element('button','btn-primary',row?'மாற்றங்களைச் சேமி / Save changes':'உறுப்பினரைச் சேர் / Add member');save.type='submit';form.append(save);
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();if(busy||!memberAccess)return;
+      let uploaded=null,saved=false;
+      try{
+        const changes={};for(const [key,input]of Object.entries(fields))changes[key]=memberText(input.value,key);
+        changes.sort_order=validateOrder(order.value);changes.published=published.checked;
+        changes.photo_path=remove.checked?null:(row?.photo_path||null);
+        const photo=file.files[0];
+        const allowed={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'};
+        if(photo&&(!allowed[photo.type]||!photo.size||photo.size>5*1024*1024))throw new Error('Choose a JPEG, PNG or WebP photo up to 5 MB.');
+        if(photo&&remove.checked)throw new Error('Choose either a replacement photo or Remove current photo.');
+        setBusy(true);message('சேமிக்கிறது… / Saving member…');
+        if(photo){
+          uploaded='members/'+crypto.randomUUID()+'.'+allowed[photo.type];
+          await api('/storage/v1/object/'+memberBucket+'/'+uploaded,{method:'POST',headers:{'Content-Type':photo.type,'x-upsert':'false','cache-control':'3600'},body:photo});
+          changes.photo_path=uploaded;
+        }
+        const result=await api(memberTable+(row?'?id=eq.'+encodeURIComponent(row.id):''),{method:row?'PATCH':'POST',headers:{'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(changes)});
+        if(!Array.isArray(result)||result.length!==1)throw new Error('Member save was not confirmed. Check administrator permissions.');
+        saved=true;await loadAdminMembers();const visible=await loadPublicMembers();
+        message(changes.published?(visible?'உறுப்பினர் வெளியிடப்பட்டார். / Member published. Visitors see changes when they open or refresh the website.':'Member saved. Public refresh failed; check the connection.'):'வரைவாகச் சேமிக்கப்பட்டது. / Member saved as a draft and hidden from visitors.');
+      }catch(error){message(error.message+(uploaded&&!saved?' Photo may remain in Storage at '+uploaded+'. Refresh the member list before retrying.':''));}
+      finally{setBusy(false);}
+    });
+    return form;
+  }
+  async function loadAdminMembers(){
+    if(!memberAccess)return;
+    const status=byId('adminMemberStatus');
+    try{
+      const rows=await allRows(memberTable+'?select='+memberFields+'&order=sort_order.asc,created_at.asc',true);
+      byId('memberCreate').replaceChildren(memberEditor(null));const list=byId('memberEditList');list.replaceChildren();
+      for(const row of rows){const detail=element('details','activity-editor-entry');detail.append(element('summary','',row.name_ta+' / '+row.name_en+(row.published?' — Published':' — Draft')),memberEditor(row));list.append(detail);}
+      if(!rows.length)list.append(element('p','','No members added yet. Use Add member above.'));
+      status.textContent='';
+    }catch(_){byId('memberCreate').replaceChildren();byId('memberEditList').replaceChildren();status.textContent='Run 01-members-setup.sql in Supabase SQL Editor (Database), ensure this account is approved for member administration, then click Refresh members.';}
+  }
+  byId('adminMembersTab').addEventListener('click',()=>selectAdminPanel('members'));
+  byId('adminMembersRefresh').addEventListener('click',async()=>{if(busy||!memberAccess)return;setBusy(true);try{await loadAdminMembers();await loadPublicMembers();}finally{setBusy(false);}});
+  loadPublicMembers();
+
   function selectAdminPanel(name){
-    const tabs={photos:'adminPhotosTab',events:'adminEventsTab',activities:'adminActivitiesTab'};
+    const tabs={photos:'adminPhotosTab',events:'adminEventsTab',activities:'adminActivitiesTab',members:'adminMembersTab'};
     if(!tabs[name]||byId(tabs[name]).hidden)name=Object.keys(tabs).find(key=>!byId(tabs[key]).hidden)||'photos';
+    byId('adminMembersPanel').hidden=name!=='members';
     byId('adminPhotoPanel').hidden=name!=='photos';byId('adminEventsPanel').hidden=name!=='events';byId('adminActivitiesPanel').hidden=name!=='activities';
     for(const [key,id]of Object.entries(tabs))byId(id).setAttribute('aria-pressed',String(name===key));
   }
