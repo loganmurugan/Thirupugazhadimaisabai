@@ -1823,6 +1823,8 @@ requestAnimationFrame(startFlowerShower);
     dialog.querySelectorAll('.daily-event-control').forEach(node=>{node.disabled=value||!eventDailyReady;});
     dialog.querySelectorAll('.completed-event-control').forEach(node=>{node.disabled=value||!eventCompletedReady;});
     dialog.querySelectorAll('.recent-update-control').forEach(node=>{node.disabled=value||!eventUpdatesReady;});
+    dialog.querySelectorAll('.event-range-control').forEach(input=>input.disabled=busy||!eventRangeReady);
+    dialog.querySelectorAll('.activity-range-control').forEach(input=>input.disabled=busy||!activityRangeReady);
     dialog.querySelectorAll('.song-admin-save').forEach(node=>{node.disabled=value||!songSchemaReady||!songCurrent;});
   }
   function showSignedOut() {
@@ -2003,26 +2005,45 @@ requestAnimationFrame(startFlowerShower);
   if (location.hash === '#admin') openAdmin();
   // Events share the existing in-memory administrator session and RLS-protected API.
   const eventSelect='id,title_ta,title_en,description_ta,description_en,event_date,event_time,venue_ta,venue_en,sort_order,published,created_at';
-  let eventsVersion=0,eventDailyReady=false,eventCompletedReady=false;
+  let eventsVersion=0,eventDailyReady=false,eventCompletedReady=false,eventRangeReady=false;
   const eventSelectDaily=eventSelect+',is_daily';
   async function readEvents(suffix,signedIn=false){
     let lastError;
-    for(const updates of [true,false]){
+    for(const range of [true,false])for(const updates of [true,false]){
       for(const [extra,daily,completed]of [[',is_daily,is_completed',true,true],[',is_daily',true,false],[',is_completed',false,true],['',false,false]]){
-        try{return {rows:await allRows('/rest/v1/sabai_events?select='+eventSelect+extra+(updates?',show_in_updates':'')+suffix,signedIn),daily,completed,updates};}
+        try{return {rows:await allRows('/rest/v1/sabai_events?select='+eventSelect+extra+(updates?',show_in_updates':'')+(range?',event_end_date':'')+suffix,signedIn),daily,completed,updates,range};}
         catch(error){lastError=error;}
       }
     }
     throw lastError;
   }
   function eventText(value,max,required=false){const text=String(value||'').trim();if((required&&!text)||text.length>max)throw new Error('Complete the required Tamil and English event fields within the displayed limits.');return text;}
+  function validateProgrammeDates(start,end){
+    for(const date of [start,end]){
+      if(!date)continue;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||date<'1900-01-01'||date>'2200-12-31')throw new Error('Enter valid dates between 1900 and 2200.');
+      const stamp=new Date(date+'T00:00:00Z');
+      if(!Number.isFinite(stamp.getTime())||stamp.toISOString().slice(0,10)!==date)throw new Error('Enter a valid calendar date.');
+    }
+    if(end&&!start)throw new Error('Choose Start Date before End Date.');
+    if(end&&end<start)throw new Error('End Date must be on or after Start Date.');
+  }
+  function appendProgrammeDates(host,start,end){
+    if(!start)return;
+    const format=(value,locale)=>new Intl.DateTimeFormat(locale,{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));
+    const range=!!end&&end!==start,detail=element('p','event-detail programme-date-range');
+    bilingual(detail,(range?'தேதிகள்: ':'தேதி: ')+format(start,'ta-IN')+(range?' – '+format(end,'ta-IN'):''),
+      (range?'Dates: ':'Date: ')+format(start,'en-IN')+(range?' – '+format(end,'en-IN'):''));
+    host.append(detail);
+  }
   function eventValues(fields){
     const row={};
     for(const key of ['title_ta','title_en','description_ta','description_en','venue_ta','venue_en'])row[key]=eventText(fields[key].value,key.startsWith('description')?4000:200,!key.startsWith('venue'));
     const date=fields.event_date.value,time=fields.event_time.value,daily=eventDailyReady&&fields.is_daily.checked;
-    if(date && (!/^\d{4}-\d{2}-\d{2}$/.test(date)||Number(date.slice(0,4))<1900||Number(date.slice(0,4))>2200||new Date(date+'T00:00:00Z').toISOString().slice(0,10)!==date))throw new Error('Enter a valid event date from 1900 to 2200.');
+    const end=eventRangeReady?fields.event_end_date.value:'';
+    validateProgrammeDates(date,end);
     if(time && ((!date&&!daily)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)))throw new Error('Choose a date or enable Daily event before entering the time. Time is in India Standard Time.');
-    row.event_date=date||null;row.event_time=time||null;row.sort_order=validateOrder(fields.sort_order.value);row.published=fields.published.checked;if(eventDailyReady)row.is_daily=daily;if(eventCompletedReady)row.is_completed=fields.is_completed.checked;if(eventUpdatesReady)row.show_in_updates=fields.show_in_updates.checked;return row;
+    row.event_date=date||null;if(eventRangeReady)row.event_end_date=end||null;row.event_time=time||null;row.sort_order=validateOrder(fields.sort_order.value);row.published=fields.published.checked;if(eventDailyReady)row.is_daily=daily;if(eventCompletedReady)row.is_completed=fields.is_completed.checked;if(eventUpdatesReady)row.show_in_updates=fields.show_in_updates.checked;return row;
   }
   function renderEvents(rows,target='publicEvents'){
     const list=byId(target);list.replaceChildren();
@@ -2037,7 +2058,7 @@ requestAnimationFrame(startFlowerShower);
       }else{date.append(element('div','day','—'));const tba=element('div','month');bilingual(tba,'விரைவில்','TBA');date.append(tba);}
       if(row.is_completed){card.className+=' event-completed';const badge=element('p','event-completed-badge');bilingual(badge,'நிகழ்வு நிறைவடைந்தது','Event completed');info.append(badge);}
       const title=element('h3');bilingual(title,row.title_ta,row.title_en);const description=element('p','event-description');bilingual(description,row.description_ta,row.description_en);info.append(title,description);
-      if(row.is_daily&&row.event_date){const start=element('p','event-detail');const stamp=new Date(row.event_date+'T00:00:00Z');bilingual(start,'தொடக்கத் தேதி: '+new Intl.DateTimeFormat('ta-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(stamp),'Starts on: '+new Intl.DateTimeFormat('en-IN',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(stamp));info.append(start);}
+      appendProgrammeDates(info,row.event_date,row.event_end_date);
       if(row.event_time){const time=element('p','event-detail');const [hours,minutes]=row.event_time.split(':');const label=(Number(hours)%12||12)+':'+minutes+' '+(Number(hours)>=12?'PM':'AM')+' IST';bilingual(time,'நேரம்: '+label,'Time: '+label);info.append(time);}
       if(row.venue_ta||row.venue_en){const venue=element('p','event-detail');bilingual(venue,'இடம்: '+(row.venue_ta||row.venue_en),'Venue: '+(row.venue_en||row.venue_ta));info.append(venue);}
       card.append(date,info);list.append(card);
@@ -2078,18 +2099,19 @@ requestAnimationFrame(startFlowerShower);
 
   function eventForm(row,updatesMode=false){
     const form=element('form','admin-form admin-event-form'),fields={},initial=row||(updatesMode?{show_in_updates:true}:null);
-    const specs=[['title_ta','தமிழ் நிகழ்வின் பெயர் / Tamil title','text',200,true],['title_en','English title','text',200,true],['description_ta','தமிழ் விவரம் / Tamil description','textarea',4000,true],['description_en','English description','textarea',4000,true],['event_date','தேதி / Date or daily start date (optional)','date'],['event_time','நேரம் / Time — IST (optional)','time'],['is_daily','தினசரி நிகழ்வு / Daily event','checkbox'],['venue_ta','தமிழ் இடம் / Tamil venue (optional)','text',200],['venue_en','English venue (optional)','text',200],['sort_order','வரிசை / Display order','number'],['show_in_updates','முகப்புச் சமீபத்திய தகவல்களில் காட்டு / Show in Recent Updates','checkbox'],['published','இணையத்தில் காட்டு / Published','checkbox'],['is_completed','நிகழ்வு நிறைவடைந்தது / Event completed','checkbox']];
+    const specs=[['title_ta','தமிழ் நிகழ்வின் பெயர் / Tamil title','text',200,true],['title_en','English title','text',200,true],['description_ta','தமிழ் விவரம் / Tamil description','textarea',4000,true],['description_en','English description','textarea',4000,true],['event_date','தொடக்கத் தேதி / Start Date (optional)','date'],['event_end_date','நிறைவுத் தேதி / End Date (optional)','date'],['event_time','நேரம் / Time — IST (optional)','time'],['is_daily','தினசரி நிகழ்வு / Daily event','checkbox'],['venue_ta','தமிழ் இடம் / Tamil venue (optional)','text',200],['venue_en','English venue (optional)','text',200],['sort_order','வரிசை / Display order','number'],['show_in_updates','முகப்புச் சமீபத்திய தகவல்களில் காட்டு / Show in Recent Updates','checkbox'],['published','இணையத்தில் காட்டு / Published','checkbox'],['is_completed','நிகழ்வு நிறைவடைந்தது / Event completed','checkbox']];
     for(const [key,labelText,type,max,required]of specs){
       const label=element('label','',labelText),input=element(type==='textarea'?'textarea':'input');
       if(type!=='textarea')input.type=type;else input.rows=4;
       if(max)input.maxLength=max;if(required)input.required=true;
       if(key.endsWith('_ta'))input.lang='ta';
       if(type==='checkbox'){input.checked=!!initial?.[key];label.className='admin-checkbox';label.prepend(input);if(key==='is_daily'){input.className='daily-event-control';input.disabled=!eventDailyReady;label.className+=' event-daily-option';}if(key==='is_completed'){input.className='completed-event-control';input.disabled=!eventCompletedReady;label.className+=' event-completed-option';}if(key==='show_in_updates'){input.className='recent-update-control';input.disabled=!eventUpdatesReady;label.className+=' event-recent-option';}}else{input.value=initial?.[key]??(key==='sort_order'?50:'');if(key==='event_time')input.value=input.value.slice(0,5);label.append(input);}
-      if(type==='date'){input.min='1900-01-01';input.max='2200-12-31';}if(type==='number'){input.min='-100000';input.max='100000';input.step='1';}
+      if(type==='date'){input.min='1900-01-01';input.max='2200-12-31';if(key==='event_end_date'){input.className='event-range-control';input.disabled=!eventRangeReady;}}if(type==='number'){input.min='-100000';input.max='100000';input.step='1';}
       fields[key]=input;form.append(label);
     }
-    const dailyHelp=element('p','admin-note event-daily-help','Daily events repeat every day at the entered time (IST). The date is an optional start date. This uses one event record; it does not create a new record each day. / தினசரி நிகழ்வுக்கு நேரத்தை மட்டும் குறிப்பிடலாம்; தொடக்கத் தேதி விருப்பமானது.');
+    const dailyHelp=element('p','admin-note event-daily-help','Daily events repeat every day at the entered time (IST). Start Date and End Date are optional; End Date requires Start Date. Dates do not automatically mark an event completed or hide it. This uses one event record; it does not create a new record each day. / தினசரி நிகழ்வுக்கு நேரத்தை மட்டும் குறிப்பிடலாம்; தொடக்கத் தேதி விருப்பமானது.');
     form.append(dailyHelp);
+    if(!eventRangeReady)form.append(element('p','admin-note','End Date is unavailable until 01-programme-date-range-setup.sql is run. Existing Start Dates still work.'));
     form.append(element('p','admin-note event-completed-help','Tick Event completed after the event ends. Keep Published enabled to display it with a completed label. For a daily event, Completed means the repeating programme has ended. Untick Completed to mark it active again. / நிகழ்வு முடிந்ததும் நிறைவடைந்தது என்பதைத் தேர்ந்தெடுத்து சேமிக்கவும்.'));
     form.append(element('p','admin-note event-recent-help','Published + Show in Recent Updates displays this entry with its date, time and venue on the homepage. Untick Show in Recent Updates to remove it from the homepage only.'));
     const save=element('button','btn-primary',updatesMode?(row?'தகவலைச் சேமி / Save update':'தகவலைச் சேர் / Add update'):(row?'சேமி / Save event':'நிகழ்வைச் சேர் / Add event'));save.type='submit';form.append(save);
@@ -2111,8 +2133,9 @@ requestAnimationFrame(startFlowerShower);
       const suffix='&order=sort_order.asc,event_date.asc.nullslast,created_at.asc';
       eventDailyReady=false;eventCompletedReady=false;eventUpdatesReady=false;recentUpdatesLoaded=false;
       const result=await readEvents(suffix,true),rows=result.rows;
-      eventDailyReady=result.daily;eventCompletedReady=result.completed;eventUpdatesReady=result.updates;recentUpdatesLoaded=result.updates;
+      eventRangeReady=result.range;eventDailyReady=result.daily;eventCompletedReady=result.completed;eventUpdatesReady=result.updates;recentUpdatesLoaded=result.updates;
       const setup=[];
+      if(!eventRangeReady)setup.push('Run 01-programme-date-range-setup.sql to enable End Date.');
       if(!eventDailyReady)setup.push('Run daily-event-setup.sql to enable Daily event.');
       if(!eventCompletedReady)setup.push('Run completed-event-setup.sql to enable Event completed.');
       if(!eventUpdatesReady)setup.push('Run 01-recent-updates-setup.sql to enable homepage Recent Updates.');
@@ -2137,7 +2160,12 @@ requestAnimationFrame(startFlowerShower);
     ['community-service','சமுதாய சேவை / Community Service']
   ];
   const activityTextSelect='block_key,topic,kind,text_ta,text_en,link_editable,link_url,record_year,sort_order';
+  let activityRangeReady=false;
   const activityEntrySelect='id,topic,title_ta,title_en,description_ta,description_en,schedule_ta,schedule_en,record_year,joining_url,sort_order,published';
+  async function readActivityEntries(suffix,signedIn=false){
+    try{return {rows:await allRows('/rest/v1/sabai_activity_entries_v1?select='+activityEntrySelect+',start_date,end_date'+suffix,signedIn),range:true};}
+    catch(error){return {rows:await allRows('/rest/v1/sabai_activity_entries_v1?select='+activityEntrySelect+suffix,signedIn),range:false};}
+  }
   function activityURL(value){
     if(!value)return '';
     try{const url=new URL(String(value).trim());return url.protocol==='https:'&&!url.username&&!url.password?url.href:'';}catch(_){return '';}
@@ -2162,6 +2190,7 @@ requestAnimationFrame(startFlowerShower);
         const title=element(pilgrimage?'summary':'h4');bilingual(title,row.title_ta,row.title_en);card.append(title);
         if(pilgrimage){card.dataset.recordYear=String(row.record_year||'');title.append(element('span','activity-cms-year',String(row.record_year||'')));}
         const description=element('p','activity-cms-description');bilingual(description,row.description_ta,row.description_en);card.append(description);
+        appendProgrammeDates(card,row.start_date,row.end_date);
         if(row.schedule_ta||row.schedule_en){const schedule=element('p','program-time');bilingual(schedule,row.schedule_ta||'',row.schedule_en||'');card.append(schedule);}
         const url=activityURL(row.joining_url);if(url){const link=element('a','activity-cms-join');link.href=url;link.target='_blank';link.rel='noopener noreferrer';bilingual(link,'இணையும் விவரங்கள் →','Joining Details →');card.append(link);}
         host.append(card);
@@ -2173,8 +2202,8 @@ requestAnimationFrame(startFlowerShower);
     const version=++activityPublicVersion;
     try{const [texts,entries]=await Promise.all([
       allRows('/rest/v1/sabai_activity_texts_v1?select='+activityTextSelect+'&order=sort_order.asc'),
-      allRows('/rest/v1/sabai_activity_entries_v1?select='+activityEntrySelect+'&published=eq.true&order=sort_order.asc,created_at.asc')
-    ]);if(version!==activityPublicVersion)return false;texts.forEach(applyActivityText);renderActivityEntries(entries);return true;}catch(_){return false;}
+      readActivityEntries('&published=eq.true&order=sort_order.asc,created_at.asc')
+    ]);if(version!==activityPublicVersion)return false;texts.forEach(applyActivityText);renderActivityEntries(entries.rows);return true;}catch(_){return false;}
   }
   function activityInput(form,labelText,value,{type='text',max=8000,required=false}={}){
     const label=element('label','',labelText),input=element(type==='textarea'?'textarea':'input');if(type==='textarea')input.rows=4;else input.type=type;
@@ -2215,8 +2244,10 @@ requestAnimationFrame(startFlowerShower);
   function entryEditForm(row){
     const form=element('form','admin-form activity-entry-form'),fields={},topicLabel=element('label','','பகுதி / Topic'),topic=element('select');
     for(const [value,label]of ACTIVITY_TOPICS.slice(1)){const option=element('option','',label);option.value=value;topic.append(option);}topic.value=row?.topic||'online-worship';topic.setAttribute('aria-label','பகுதி / Topic');topicLabel.append(topic);form.append(topicLabel);fields.topic=topic;
-    const specs=[['title_ta','தமிழ் தலைப்பு / Tamil title','text',240,true],['title_en','English title','text',240,true],['description_ta','தமிழ் விவரம் / Tamil details','textarea',8000,true],['description_en','English details','textarea',8000,true],['schedule_ta','தமிழ் நேரம் / Tamil schedule (optional)','text',400],['schedule_en','English schedule (optional)','text',400],['record_year','ஆண்டு / Year (required for pilgrimages)','number',4],['joining_url','HTTPS joining link (optional)','text',2048],['sort_order','வரிசை / Display order','number',6]];
+    const specs=[['title_ta','தமிழ் தலைப்பு / Tamil title','text',240,true],['title_en','English title','text',240,true],['description_ta','தமிழ் விவரம் / Tamil details','textarea',8000,true],['description_en','English details','textarea',8000,true],['start_date','தொடக்கத் தேதி / Start Date (optional)','date'],['end_date','நிறைவுத் தேதி / End Date (optional)','date'],['schedule_ta','தமிழ் நேரம் / Tamil schedule (optional)','text',400],['schedule_en','English schedule (optional)','text',400],['record_year','ஆண்டு / Year (required for pilgrimages)','number',4],['joining_url','HTTPS joining link (optional)','text',2048],['sort_order','வரிசை / Display order','number',6]];
     for(const [key,label,type,max,required]of specs)fields[key]=activityInput(form,label,row?.[key]??(key==='sort_order'?50:''),{type,max,required:!!required});
+    for(const key of ['start_date','end_date']){fields[key].min='1900-01-01';fields[key].max='2200-12-31';fields[key].className='activity-range-control';fields[key].disabled=!activityRangeReady;}
+    if(!activityRangeReady)form.append(element('p','admin-note','Run 01-programme-date-range-setup.sql to enable programme dates, then Refresh Activities.'));
     fields.record_year.min=1900;fields.record_year.max=2200;fields.sort_order.min=-100000;fields.sort_order.max=100000;fields.sort_order.step=1;
     const publishedLabel=element('label','admin-checkbox'),published=element('input');published.type='checkbox';published.checked=!!row?.published;publishedLabel.append(published,document.createTextNode(' வெளியிடு / Published'));form.append(publishedLabel);fields.published=published;
     const save=element('button','btn-primary',row?'மாற்றங்களைச் சேமி / Save Changes':'புதிய பதிவைச் சேர் / Add Entry');save.type='submit';form.append(save);
@@ -2225,6 +2256,7 @@ requestAnimationFrame(startFlowerShower);
       try{
         const changes={topic:topic.value,published:published.checked,sort_order:validateOrder(fields.sort_order.value),record_year:activityYear(fields.record_year.value,topic.value==='pilgrimage-records')};
         for(const key of ['title_ta','title_en','description_ta','description_en','schedule_ta','schedule_en'])changes[key]=activityText(fields[key].value,key.startsWith('title')?240:key.startsWith('schedule')?400:8000,!key.startsWith('schedule'));
+        if(activityRangeReady){validateProgrammeDates(fields.start_date.value,fields.end_date.value);changes.start_date=fields.start_date.value||null;changes.end_date=fields.end_date.value||null;}
         changes.joining_url=activityURL(fields.joining_url.value)||null;if(fields.joining_url.value.trim()&&!changes.joining_url)throw new Error('Enter a valid HTTPS joining link without credentials.');
         setBusy(true);message('பதிவு சேமிக்கப்படுகிறது… / Saving activity…');
         const saved=await api('/rest/v1/sabai_activity_entries_v1'+(row?'?id=eq.'+encodeURIComponent(row.id):''),{method:row?'PATCH':'POST',headers:{'Content-Type':'application/json',Prefer:'return=representation'},body:JSON.stringify(changes)});
@@ -2240,9 +2272,12 @@ requestAnimationFrame(startFlowerShower);
     try{
       [activityTexts,activityEntries]=await Promise.all([
         allRows('/rest/v1/sabai_activity_texts_v1?select='+activityTextSelect+'&order=sort_order.asc',true),
-        allRows('/rest/v1/sabai_activity_entries_v1?select='+activityEntrySelect+'&order=sort_order.asc,created_at.asc',true)
+        readActivityEntries('&order=sort_order.asc,created_at.asc',true)
       ]);
-      status.textContent='';renderActivityTextEditor();
+      activityRangeReady=activityEntries.range;activityEntries=activityEntries.rows;
+      status.textContent=activityRangeReady?'':'Run 01-programme-date-range-setup.sql to enable programme Start Date and End Date.';
+      renderActivityTextEditor();
+      byId('activityEntryCreate').replaceChildren();
       if(!byId('activityEntryCreate').childNodes.length)byId('activityEntryCreate').append(entryEditForm(null));
       const list=byId('activityEntryList');list.replaceChildren();
       for(const row of activityEntries){const detail=element('details','activity-editor-entry');detail.append(element('summary','',row.title_ta+' / '+row.title_en+(row.published?' — Published':' — Draft')),entryEditForm(row));list.append(detail);}
