@@ -747,6 +747,25 @@ body main>section#thirupugazh .song-collection-card{display:flex;flex-direction:
 .reciter-date-result{margin:12px 0;color:#714b2c}
 @media(max-width:600px){.reciter-date-filters{justify-content:center}.reciter-date-filters label{text-align:center}.reciter-library-note,.reciter-date-result{text-align:center}}
 </style>
+<style id="compactFloatingShortcuts">
+/* Compact left-side links with readable labels and usable touch targets. */
+.thirupugazh-shortcut{width:76px;height:78px;gap:2px}
+.thirupugazh-shortcut img{width:50px;height:50px}
+.thirupugazh-shortcut-label{font-size:11px;padding:1px 5px}
+.contribution-shortcut{width:76px;min-height:72px;gap:3px;bottom:calc(188px + env(safe-area-inset-bottom))}
+.contribution-shortcut-icon{width:42px;height:42px}
+.contribution-shortcut-icon svg{width:24px;height:24px}
+.contribution-shortcut-label{font-size:11px;padding:1px 5px}
+@media(max-width:768px){
+.thirupugazh-shortcut{width:62px;height:66px;bottom:calc(90px + env(safe-area-inset-bottom))}
+.thirupugazh-shortcut img{width:40px;height:40px}
+.thirupugazh-shortcut-label{font-size:9px;padding:1px 4px}
+.contribution-shortcut{left:calc(max(12px,env(safe-area-inset-left)) + 70px);width:62px;height:66px;min-height:66px;bottom:calc(90px + env(safe-area-inset-bottom));gap:3px}
+.contribution-shortcut-icon{width:36px;height:36px}
+.contribution-shortcut-icon svg{width:22px;height:22px}
+.contribution-shortcut-label{font-size:10px;padding:1px 4px}
+}
+</style>
 </head>
 <body>
 <!-- LANG TOGGLE -->
